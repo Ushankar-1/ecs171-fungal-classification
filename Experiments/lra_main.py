@@ -21,23 +21,24 @@ parser.add_argument('--seed', type=int, default=1)
 args = parser.parse_args()
 
 
-# Config
+# Configure device (GPU)
 use_wandb = False
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-TASK = args.task
+# Set arguments
 MODEL = args.model
 SEED = args.seed
 
+# If WANDB, seed for experiment tracking 
 seed_everything(args.seed)
 if use_wandb:
-    wandb.init(project=TASK, name=MODEL + str(SEED), entity="leic-no")
+    wandb.init(project="Images", name=MODEL + str(SEED), entity="leic-no")
     WANDB = wandb
 else:
     WANDB = None
 
-cfg_training = config[TASK]['training']
-cfg_model = config[TASK]['models']
+cfg_training = config['training']
+cfg_model = config['models']
 
 BATCH = cfg_training['batch_size']
 CLASS = cfg_model['n_class']
@@ -48,38 +49,33 @@ CHAR_COCAB = cfg_model['vocab_size']
 INPUT_SIZE = cfg_model['dim']
 
 
-# Model
+# Model selection with configs 
 if MODEL == 'CDIL' or MODEL == 'DIL' or MODEL == 'TCN' or MODEL == 'CNN':
     LAYER = cfg_model['cnn_layer']
     NHID = cfg_model['cnn_hidden']
     KERNEL_SIZE = cfg_model['cnn_ks']
-    net_part = CONV(TASK, MODEL, INPUT_SIZE, CLASS, [NHID] * LAYER, KERNEL_SIZE, False, False, USE_EMBED, CHAR_COCAB, FIX_length)
+    net = CONV(TASK, MODEL, INPUT_SIZE, CLASS, [NHID] * LAYER, KERNEL_SIZE, False, False, USE_EMBED, CHAR_COCAB, FIX_length)
     receptive_field(seq_length=SEQ_LEN, model=MODEL, kernel_size=KERNEL_SIZE, layer=LAYER)
 elif MODEL == 'Deformable':
     LAYER = cfg_model['cnn_layer']
     NHID = cfg_model['cnn_hidden']
     KERNEL_SIZE = cfg_model['cnn_ks']
-    net_part = CONV(TASK, 'CNN', INPUT_SIZE, CLASS, [NHID] * LAYER, KERNEL_SIZE, True, False, USE_EMBED, CHAR_COCAB, FIX_length)
+    net = CONV(TASK, 'CNN', INPUT_SIZE, CLASS, [NHID] * LAYER, KERNEL_SIZE, True, False, USE_EMBED, CHAR_COCAB, FIX_length)
     receptive_field(seq_length=SEQ_LEN, model=MODEL, kernel_size=KERNEL_SIZE, layer=LAYER)
 elif MODEL == 'LSTM' or MODEL == 'GRU':
     LAYER = cfg_model['rnn_layer']
     NHID = cfg_model['rnn_hidden']
-    net_part = RNN(TASK, MODEL, INPUT_SIZE, CLASS, NHID, LAYER, USE_EMBED, CHAR_COCAB, FIX_length)
+    net = RNN(TASK, MODEL, INPUT_SIZE, CLASS, NHID, LAYER, USE_EMBED, CHAR_COCAB, FIX_length)
 else:
-    print('no this model.')
+    print('no model specified.')
     sys.exit()
-
-if TASK == 'retrieval_4000':
-    net = NetDual(net_part, NHID, CLASS)
-else:
-    net = net_part
 
 net = net.to(device)
 para_num = sum(p.numel() for p in net.parameters() if p.requires_grad)
 
 
 # Log
-file_name = TASK + '_P' + str(para_num) + '_' + MODEL + '_S' + str(SEED) + '_L' + str(LAYER) + '_H' + str(NHID)
+file_name = 'P' + str(para_num) + '_' + MODEL + '_S' + str(SEED) + '_L' + str(LAYER) + '_H' + str(NHID)
 
 os.makedirs('lra_log', exist_ok=True)
 os.makedirs('lra_model', exist_ok=True)
@@ -99,14 +95,13 @@ loss = torch.nn.CrossEntropyLoss(reduction='sum')
 
 
 # Data
-trainloader = DataLoader(LRADataset(f'./lra_datasets/{TASK}.train.pickle', True), batch_size=BATCH, shuffle=True, drop_last=False)
-valloader = DataLoader(LRADataset(f'./lra_datasets/{TASK}.dev.pickle', True), batch_size=BATCH, shuffle=False, drop_last=False)
-testloader = DataLoader(LRADataset(f'./lra_datasets/{TASK}.test.pickle', False), batch_size=BATCH, shuffle=False, drop_last=False)
+trainloader = DataLoader(LRADataset(f'./lra_datasets/train.pickle', True), batch_size=BATCH, shuffle=True, drop_last=False)
+valloader = DataLoader(LRADataset(f'./lra_datasets/dev.pickle', True), batch_size=BATCH, shuffle=False, drop_last=False)
+testloader = DataLoader(LRADataset(f'./lra_datasets/test.pickle', False), batch_size=BATCH, shuffle=False, drop_last=False)
 
 
 # train
 TrainModel(
-    task=TASK,
     fix_length=FIX_length,
     net=net,
     device=device,
@@ -117,6 +112,6 @@ TrainModel(
     optimizer=optimizer,
     loss=loss,
     loginf=loginf,
-    wandb=WANDB,
+    wandb=WANDB,F
     file_name=model_name
 )
