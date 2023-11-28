@@ -16,10 +16,6 @@ from Models.net_rnn import RNN
 from Models.utils import seed_everything, LRADataset
 
 parser = argparse.ArgumentParser(description='experiment')
-parser.add_argument('--task', type=str, default='image')
-# parser.add_argument('--task', type=str, default='pathfinder32')
-# parser.add_argument('--task', type=str, default='text_4000')
-# parser.add_argument('--task', type=str, default='retrieval_4000')
 parser.add_argument('--model', type=str, default='CDIL')
 parser.add_argument('--seed', type=int, default=1)
 args = parser.parse_args()
