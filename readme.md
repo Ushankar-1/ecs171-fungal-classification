@@ -2,6 +2,13 @@
 
 Report will be linked [here].
 
+`./EDA` contains dataset and Exploratory Data Analysis scripts 
+`./Models` contains CDIL-CNN, and other ML models, which can be invoked in the runtime
+`./Experiments` contains all components of the runtime. Process below:
+1) Runtime is performed in `lra_main.py`, and it's also where the training happens. Methods for the training are called from `lra_train.py` 
+2) `lra_all.sh` is a simple wrap-around script that executes all of the models in `./Models` to make some comparisons
+3) `lra_config.py` is passed into the runtime for the CNN's hyperparameters
+
 # Classification of Long Sequential Data using Circular Dilated Convolutional Neural Networks
 
 paper: [https://doi.org/10.1016/j.neucom.2022.10.054](https://doi.org/10.1016/j.neucom.2022.10.054). 
@@ -33,36 +40,6 @@ CDIL-CNN is a novel convolutional model for sequence classification. We use symm
 
 ## **Experiments**
 
-### Synthetic Task
-To reproduce the synthetic data experiment results, you should:
-1. Run ***xor_generation.py***;
-2. Run ***xor_main.py*** for one model or run ***xor_all.sh*** for all models.
-
-The generator will create 3 files for each sequence length and store them in the **./xor_datasets/** folder in the following format:
-`xor_{length}_train.pt`
-`xor_{length}_test.pt`
-`xor_{length}_val.pt`
-
-The **./xor_log/** folder will save all results.
-The **./xor_model/** folder will save all best models.
-
-
-To reproduce the dissimilar experiment results, you should:
-1. Run ***dissimilar_generation.py***;
-2. Run ***dissimilar_main.py*** for one model or run ***dissimilar_all.sh*** for all models.
-
-The generator will create 4 files for sequence length of 2048 and store them in the **./dissimilar_datasets/** folder in the following format:
-`dissimilar_2048_train.pt`
-`dissimilar_2048_test.pt`
-`dissimilar_2048_val.pt`
-`dissimilar_2048_dtest.pt`
-
-The **./dissimilar_log/** folder will save all results.
-The **./dissimilar_model/** folder will save all best models.
-
-We provide our used configurations in ***syn_config.py***.
-
-
 ### Long Range Arena
 Long Range Arena (LRA) is a public benchmark suite. The datasets and the download link can be found in [the official GitHub repository](https://github.com/google-research/long-range-arena). 
 
@@ -79,42 +56,6 @@ The **./lra_log/** folder will save all results.
 The **./lra_model/** folder will save all best models.
 
 We provide our used configurations in ***lra_config.py***.
-
-
-### Time Series
-The [UEA & UCR Repository](http://www.timeseriesclassification.com/) consists of various time series classification datasets. We use three audio datasets: [FruitFlies](http://www.timeseriesclassification.com/description.php?Dataset=FruitFlies), [RightWhaleCalls](http://www.timeseriesclassification.com/description.php?Dataset=RightWhaleCalls), and [MosquitoSound](http://www.timeseriesclassification.com/description.php?Dataset=MosquitoSound).
-
-To reproduce the time series results, you should:
-1. Download the datasets, extract them, move the extracted folders into our **./time_datasets/** folder, and run ***time_arff_generation.py***. 
-2. Run ***time_main.py*** or  for one experiment or run ***time_all.sh*** for all experiments.
-
-The generator will create 3 files for each dataset and store them in the **./time_datasets/** folder in the following format:
-`{dataset}_train.csv`
-`{dataset}_val.csv`
-`{dataset}_test.csv`
-
-The **./time_log/** folder will save all results.
-The **./time_model/** folder will save all best models.
-
-To reproduce the noisy RightWhaleCalls results, you should:
-1. Run ***noise_generation.py***;
-2. Run ***noise_main.py*** for one model or run ***noise_all.sh*** for all models.
-
-The generator will create 8 files for each dataset and store them in the **./noise_datasets/** folder in the following format:
-`RightWhaleCalls_train_data.csv`
-`RightWhaleCalls_train_label.csv`
-`RightWhaleCalls_val_data.csv`
-`RightWhaleCalls_val_label.csv`
-`RightWhaleCalls_test_data.csv`
-`RightWhaleCalls_test_label.csv`
-`RightWhaleCalls_dtest_data.csv`
-`RightWhaleCalls_dtest_label.csv`
-
-The **./noise_log/** folder will save all results.
-The **./noise_model/** folder will save all best models.
-
-
-We provide our used configurations in ***time_config.py***.
 
 # **Cite**
 ```
