@@ -1,9 +1,3 @@
-# Ignore the dataset. Don't track changes across images
- EDA/Dataset/*
-
-# Ignore contents of  Misc
-Misc/*
-
 # Ignore any and all checkpoints 
 *-checkpoint.*
 
