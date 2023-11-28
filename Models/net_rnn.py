@@ -3,9 +3,8 @@ import torch.nn as nn
 
 
 class RNN(nn.Module):
-    def __init__(self, task, model, input_size, output_size, hidden_size, num_layers, use_embed=False, char_vocab=None, fix_length=True):
+    def __init__(self, model, input_size, output_size, hidden_size, num_layers, use_embed=False, char_vocab=None, fix_length=True):
         super(RNN, self).__init__()
-        self.task = task
         self.use_embed = use_embed
         self.fix_length = fix_length
 
@@ -19,9 +18,8 @@ class RNN(nn.Module):
         else:
             print('no this model.')
             sys.exit()
-
-        if self.task != 'retrieval_4000':
-            self.linear = nn.Linear(hidden_size, output_size)
+        
+        self.linear = nn.Linear(hidden_size, output_size)
 
     def forward(self, x, mask=None):
         if self.use_embed:
@@ -37,8 +35,5 @@ class RNN(nn.Module):
             P = mask.unsqueeze(1).expand(y_rnn.size(1), y_rnn.size(2)).unsqueeze(0)
             y_class = y_rnn.gather(0, P).squeeze(0)
 
-        if self.task == 'retrieval_4000':
-            return y_class
-        else:
-            y = self.linear(y_class)
-            return y
+        y = self.linear(y_class)
+        return y

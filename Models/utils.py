@@ -16,23 +16,8 @@ def seed_everything(seed=1234):
     # torch.backends.cudnn.deterministic = True
     # torch.backends.cudnn.benchmark = True
 
-
-class DatasetCreator(Dataset):
-    def __init__(self, data, labels):
-        self.data = data
-        self.labels = labels
-
-    def __getitem__(self, index):
-        X = self.data[index]
-        Y = self.labels[index]
-        return X, Y
-
-    def __len__(self):
-        return len(self.labels)
-
-
 # Refer to https://github.com/mlpen/Nystromformer/blob/main/LRA/code/dataset.py
-class LRADataset(Dataset):
+class DeFungiDataset(Dataset):
     def __init__(self, file_path, endless):
 
         self.endless = endless

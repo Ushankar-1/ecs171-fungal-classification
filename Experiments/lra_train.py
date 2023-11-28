@@ -76,8 +76,6 @@ def TrainModel(
         n_epochs,
         optimizer,
         loss,
-        loginf,
-        wandb,
         file_name
 ):
     saving_best = 0
@@ -113,10 +111,5 @@ def TrainModel(
                 torch.save(net.state_dict(), file_name)
                 _, test_acc = net_eval(fix_length, 'Test', 120, testloader, device, net, loss, loginf)
 
-        if wandb is not None:
-            wandb.log({"train loss": train_loss_mean,
-                       "val loss": val_loss_mean,
-                       "val acc": val_acc,
-                       })
     loginf('best test acc: {}'.format(test_acc))
     loginf('_' * 200)

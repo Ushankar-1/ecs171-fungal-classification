@@ -127,9 +127,8 @@ class ConvPart(nn.Module):
 
 # Conv. + classifier
 class CONV(nn.Module):
-    def __init__(self, task, model, input_size, output_size, num_channels, kernel_size, deformable=False, dynamic=False, use_embed=False, char_vocab=None, fix_length=True):
+    def __init__(self, model, input_size, output_size, num_channels, kernel_size, deformable=False, dynamic=False, use_embed=False, char_vocab=None, fix_length=True):
         super(CONV, self).__init__()
-        self.task = task
         self.model = model
         self.dynamic = dynamic
         self.use_embed = use_embed
@@ -139,9 +138,7 @@ class CONV(nn.Module):
             self.embedding = nn.Embedding(char_vocab, input_size)
 
         self.conv = ConvPart(model, input_size, num_channels, kernel_size, deformable, dynamic)
-
-        if self.task != 'retrieval_4000':
-            self.linear = nn.Linear(num_channels[-1], output_size)
+        self.linear = nn.Linear(num_channels[-1], output_size)
 
     def forward(self, x, mask=None):
         if self.use_embed:
@@ -161,8 +158,5 @@ class CONV(nn.Module):
         else:
             y_class = torch.mean(y_conv, dim=2)
 
-        if self.task == 'retrieval_4000':
-            return y_class
-        else:
-            y = self.linear(y_class)
-            return y
+        y = self.linear(y_class)
+        return y

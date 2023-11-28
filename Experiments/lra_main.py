@@ -1,9 +1,9 @@
 import os
 import sys
-import wandb
 import torch
 import logging
 import argparse
+import pickle
 from torch.utils.data import DataLoader
 
 from lra_config import config
@@ -13,7 +13,7 @@ sys.path.append('../')
 from Models.net_conv import CONV
 from Models.net_conv_rf import receptive_field
 from Models.net_rnn import RNN
-from Models.utils import seed_everything, LRADataset
+from Models.utils import seed_everything, DeFungiDataset
 
 parser = argparse.ArgumentParser(description='experiment')
 parser.add_argument('--model', type=str, default='CDIL')
@@ -22,21 +22,13 @@ args = parser.parse_args()
 
 
 # Configure device (GPU)
-use_wandb = False
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 # Set arguments
 MODEL = args.model
 SEED = args.seed
 
-# If WANDB, seed for experiment tracking 
-seed_everything(args.seed)
-if use_wandb:
-    wandb.init(project="Images", name=MODEL + str(SEED), entity="leic-no")
-    WANDB = wandb
-else:
-    WANDB = None
-
+# Config parameters
 cfg_training = config['training']
 cfg_model = config['models']
 
@@ -54,18 +46,18 @@ if MODEL == 'CDIL' or MODEL == 'DIL' or MODEL == 'TCN' or MODEL == 'CNN':
     LAYER = cfg_model['cnn_layer']
     NHID = cfg_model['cnn_hidden']
     KERNEL_SIZE = cfg_model['cnn_ks']
-    net = CONV(TASK, MODEL, INPUT_SIZE, CLASS, [NHID] * LAYER, KERNEL_SIZE, False, False, USE_EMBED, CHAR_COCAB, FIX_length)
+    net = CONV(MODEL, INPUT_SIZE, CLASS, [NHID] * LAYER, KERNEL_SIZE, False, False, USE_EMBED, CHAR_COCAB, FIX_length)
     receptive_field(seq_length=SEQ_LEN, model=MODEL, kernel_size=KERNEL_SIZE, layer=LAYER)
 elif MODEL == 'Deformable':
     LAYER = cfg_model['cnn_layer']
     NHID = cfg_model['cnn_hidden']
     KERNEL_SIZE = cfg_model['cnn_ks']
-    net = CONV(TASK, 'CNN', INPUT_SIZE, CLASS, [NHID] * LAYER, KERNEL_SIZE, True, False, USE_EMBED, CHAR_COCAB, FIX_length)
+    net = CONV('CNN', INPUT_SIZE, CLASS, [NHID] * LAYER, KERNEL_SIZE, True, False, USE_EMBED, CHAR_COCAB, FIX_length)
     receptive_field(seq_length=SEQ_LEN, model=MODEL, kernel_size=KERNEL_SIZE, layer=LAYER)
 elif MODEL == 'LSTM' or MODEL == 'GRU':
     LAYER = cfg_model['rnn_layer']
     NHID = cfg_model['rnn_hidden']
-    net = RNN(TASK, MODEL, INPUT_SIZE, CLASS, NHID, LAYER, USE_EMBED, CHAR_COCAB, FIX_length)
+    net = RNN(MODEL, INPUT_SIZE, CLASS, NHID, LAYER, USE_EMBED, CHAR_COCAB, FIX_length)
 else:
     print('no model specified.')
     sys.exit()
@@ -77,10 +69,10 @@ para_num = sum(p.numel() for p in net.parameters() if p.requires_grad)
 # Log
 file_name = 'P' + str(para_num) + '_' + MODEL + '_S' + str(SEED) + '_L' + str(LAYER) + '_H' + str(NHID)
 
-os.makedirs('lra_log', exist_ok=True)
-os.makedirs('lra_model', exist_ok=True)
-log_file_name = './lra_log/' + file_name + '.txt'
-model_name = './lra_model/' + file_name + '.ph'
+os.makedirs('DeFungi_log', exist_ok=True)
+os.makedirs('DeFungi_model', exist_ok=True)
+log_file_name = './DeFungi_log/' + file_name + '.txt'
+model_name = './DeFungi_model/' + file_name + '.ph'
 handlers = [logging.FileHandler(log_file_name), logging.StreamHandler()]
 logging.basicConfig(level=logging.INFO, format='%(message)s', handlers=handlers)
 loginf = logging.info
@@ -95,9 +87,9 @@ loss = torch.nn.CrossEntropyLoss(reduction='sum')
 
 
 # Data
-trainloader = DataLoader(LRADataset(f'./lra_datasets/train.pickle', True), batch_size=BATCH, shuffle=True, drop_last=False)
-valloader = DataLoader(LRADataset(f'./lra_datasets/dev.pickle', True), batch_size=BATCH, shuffle=False, drop_last=False)
-testloader = DataLoader(LRADataset(f'./lra_datasets/test.pickle', False), batch_size=BATCH, shuffle=False, drop_last=False)
+trainloader = DataLoader(DeFungiDataset(f'./defungi_datasets/train.pickle', True), batch_size=BATCH, shuffle=True, drop_last=False)
+valloader = DataLoader(DeFungiDataset(f'./defungi_datasets/dev.pickle', True), batch_size=BATCH, shuffle=False, drop_last=False)
+testloader = DataLoader(DeFungiDataset(f'./defungi_datasets/test.pickle', False), batch_size=BATCH, shuffle=False, drop_last=False)
 
 
 # train
@@ -112,6 +104,9 @@ TrainModel(
     optimizer=optimizer,
     loss=loss,
     loginf=loginf,
-    wandb=WANDB,F
     file_name=model_name
 )
+
+# Save Training Results for front-end
+filename = 'fungi_classifier.sav'
+pickle.dump('DeFungi CDIL-CNN', open(filename, 'wb'))
