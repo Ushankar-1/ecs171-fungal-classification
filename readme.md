@@ -9,6 +9,11 @@ Report will be linked [here].
 2) `lra_all.sh` is a simple wrap-around script that executes all of the models in `./Models` to make some comparisons
 3) `lra_config.py` is passed into the runtime for the CNN's hyperparameters
 
+---
+`***Everything below is a modified version of the readme.md from the CDIL-CNN GitHub repository.***`  
+[Link to Repository](https://github.com/LeiCheng-no/CDIL-CNN/)
+---
+
 # Classification of Long Sequential Data using Circular Dilated Convolutional Neural Networks
 
 paper: [https://doi.org/10.1016/j.neucom.2022.10.054](https://doi.org/10.1016/j.neucom.2022.10.054). 
