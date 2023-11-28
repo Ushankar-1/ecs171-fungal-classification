@@ -10,7 +10,7 @@ Report will be linked [here].
 3) `lra_config.py` is passed into the runtime for the CNN's hyperparameters
 
 ---
-`***Everything below is a modified version of the readme.md from the CDIL-CNN GitHub repository.***`  
+***Everything below is a modified version of the readme.md from the CDIL-CNN GitHub repository.***
 [Link to Repository](https://github.com/LeiCheng-no/CDIL-CNN/)
 ---
 
