@@ -1,1 +1,0 @@
-ECS 171 Group 20 - Early Onset Fungal Infection Classifier 
