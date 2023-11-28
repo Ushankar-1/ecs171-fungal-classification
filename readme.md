@@ -2,8 +2,8 @@
 
 Report will be linked [here].
 
-`./EDA` contains dataset and Exploratory Data Analysis scripts 
-`./Models` contains CDIL-CNN, and other ML models, which can be invoked in the runtime
+`./EDA` contains dataset and Exploratory Data Analysis scripts. 
+`./Models` contains CDIL-CNN, and other ML models, which can be invoked in the runtime.
 `./Experiments` contains all components of the runtime. Process below:
 1) Runtime is performed in `lra_main.py`, and it's also where the training happens. Methods for the training are called from `lra_train.py` 
 2) `lra_all.sh` is a simple wrap-around script that executes all of the models in `./Models` to make some comparisons
