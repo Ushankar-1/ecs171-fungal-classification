@@ -11,21 +11,21 @@ CDIL-CNN is a novel convolutional model for sequence classification. We use symm
 
 #### Symmetric Dilated Convolutions
 <p align="left">
-<img src="figures/dil.png" width="600">
+<img src="Misc/dil.png" width="600">
 </p>
 
 
 #### Circular Mixing
 <p align="left">
-<img src="figures/cir1.png" width="150">
-<img src="figures/cir2.png" width="150">
-<img src="figures/cir3.png" width="150">
+<img src="Misc/cir1.png" width="150">
+<img src="Misc/cir2.png" width="150">
+<img src="Misc/cir3.png" width="150">
 </p>
 
 
 #### CDIL-CNN
 <p align="left">
-<img src="figures/cdil.png" width="300">
+<img src="Misc/cdil.png" width="300">
 </p>
 
 
