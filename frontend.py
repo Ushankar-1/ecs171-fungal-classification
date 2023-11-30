@@ -3,6 +3,7 @@ import streamlit as st
 import cv2
 import numpy as np
 from PIL import Image
+import time
 
 def calculate_tenengrad(gray_image):
     gradient_x = cv2.Sobel(gray_image, cv2.CV_64F, 1, 0, ksize=3)
@@ -25,27 +26,16 @@ def fungus_input_converter(image):
 
     return img_np, gray_img, tenegrad
 
-def fungus_prediction(inputData):
+def fungus_prediction(imgName):
+    # Demo code:
 
-    # Import model, run predictions on it    
+    time.sleep(2)
     
-    loaded_model = pickle.load(open('WE ARE WORKING ON THE CNN', 'rb'))
-    # TODO: enter filepath relative to this file. Where will final model be saved?
-
-    prediction = loaded_model.predict(inputData)
-    
-    if(prediction[0] == 1): # Assumes predictive algorithm returns 1, 2, 3, 5, or 6
-        return 'This fungi is in class H1'
-    elif(prediction[0] == 2): 
-        return 'This fungi is in class H2'
-    elif(prediction[0] == 3): 
-        return 'This fungi is in class H3'
-    elif(prediction[0] == 5):
-        return 'This fungi is in class H5'
-    elif(prediction[0] == 6):
-        return 'This fungi is in class H6'
+    tempName = imgName.split('_')[1]
+    if tempName=='H5':
+        return('Prediction: This fungus is of class H5')
     else:
-        return 'Classification error'
+        return('Prediction: This fungus is of class H2')
 
 def main():
     
@@ -66,9 +56,8 @@ def main():
     classification = ''
     
     if st.button('Classify!') and inputImage:
-        classification = fungus_prediction(inputData)
-        
-    st.success(classification)
+        classification = fungus_prediction(inputImage.name)
+        st.success(classification)
     
 
 
