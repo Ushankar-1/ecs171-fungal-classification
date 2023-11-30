@@ -2,6 +2,7 @@ import pickle
 import streamlit as st
 import cv2
 import numpy as np
+from PIL import Image
 
 def calculate_tenengrad(gray_image):
     gradient_x = cv2.Sobel(gray_image, cv2.CV_64F, 1, 0, ksize=3)
@@ -15,7 +16,11 @@ def fungus_input_converter(image):
     
     img_np = np.array(image)
     
-    gray_img = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY)
+    if img_np.ndim == 2: # image is already grayscale
+        gray_img = img_np
+    else: # converts RBG image to grayscale
+        gray_img = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY)
+        
     tenegrad = calculate_tenengrad(gray_img)
 
     return img_np, gray_img, tenegrad
