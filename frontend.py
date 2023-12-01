@@ -29,11 +29,17 @@ def fungus_input_converter(image):
 def fungus_prediction(imgName):
     # Demo code:
 
-    time.sleep(2)
+    time.sleep(1.15)
     
     tempName = imgName.split('_')[1]
     if tempName=='H5':
         return('Prediction: This fungus is of class H5')
+    elif tempName=='H6':
+        return('Prediction: This fungus is of class H6')
+    elif tempName=='H3':
+        return('Prediction: This fungus is of class H3')
+    elif tempName=='H1':
+        return('Prediction: This fungus is of class H1')
     else:
         return('Prediction: This fungus is of class H2')
 
