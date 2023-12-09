@@ -1,13 +1,14 @@
 # ECS 171 Group 20 - Early Onset Fungal Infection Classifier 
 
-Report will be linked [here].
+[Report](https://www.overleaf.com/project/6552ffdb8bbc78e82820ad55)
 
 `./EDA` contains dataset and Exploratory Data Analysis scripts. 
 `./Models` contains CDIL-CNN, and other ML models, which can be invoked in the runtime.
 `./Experiments` contains all components of the runtime. Process below:
 1) Runtime is performed in `main.ipynb`, and it's also where the training happens. Methods for the training are called from `train.ipynb` 
-2) `run_all_models.sh` is a simple wrap-around script that executes all of the models in `./Models` to make some comparisons
-3) `config.ipynb` is passed into the runtime for the CNN's hyperparameters
+2) `config.ipynb` is passed into the runtime for the CNN's hyperparameters
+3) `defungi.ipynb' performs the necessary processing to complete
+4) You need only run `main.ipynb` for runtime, cell by cell. It will load in the local dataset every time, invoke the architecture, and train it on the CDIL-CNN
 
 ---
 ***Everything below is a modified version of the readme.md from the CDIL-CNN GitHub repository.***
@@ -39,28 +40,6 @@ CDIL-CNN is a novel convolutional model for sequence classification. We use symm
 <p align="left">
 <img src="Misc/cdil.png" width="300">
 </p>
-
-
-
-
-## **Experiments**
-
-### Long Range Arena
-Long Range Arena (LRA) is a public benchmark suite. The datasets and the download link can be found in [the official GitHub repository](https://github.com/google-research/long-range-arena). 
-
-To reproduce the LRA experiment results, you should:
-1. Download `lra_release.gz` (~7.7 GB), extract it, move the folder `./lra_release/lra_release` into our **./create_datasets/** folder, and run ***all_create_datasets.sh***. 
-2. Run ***lra_main.py*** for one experiment or run ***lra_all.sh*** for all experiments.
-
-The dataset creators will create 3 files for each task and store them in the **./lra_datasets/** folder in the following format:
-`{task}.train.pickle`
-`{task}.test.pickle`
-`{task}.dev.pickle`
-
-The **./lra_log/** folder will save all results.
-The **./lra_model/** folder will save all best models.
-
-We provide our used configurations in ***config.ipynb***.
 
 # **Cite**
 ```
