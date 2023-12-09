@@ -5,9 +5,9 @@ Report will be linked [here].
 `./EDA` contains dataset and Exploratory Data Analysis scripts. 
 `./Models` contains CDIL-CNN, and other ML models, which can be invoked in the runtime.
 `./Experiments` contains all components of the runtime. Process below:
-1) Runtime is performed in `lra_main.py`, and it's also where the training happens. Methods for the training are called from `lra_train.py` 
-2) `lra_all.sh` is a simple wrap-around script that executes all of the models in `./Models` to make some comparisons
-3) `lra_config.py` is passed into the runtime for the CNN's hyperparameters
+1) Runtime is performed in `main.ipynb`, and it's also where the training happens. Methods for the training are called from `train.ipynb` 
+2) `run_all_models.sh` is a simple wrap-around script that executes all of the models in `./Models` to make some comparisons
+3) `config.ipynb` is passed into the runtime for the CNN's hyperparameters
 
 ---
 ***Everything below is a modified version of the readme.md from the CDIL-CNN GitHub repository.***
@@ -60,7 +60,7 @@ The dataset creators will create 3 files for each task and store them in the **.
 The **./lra_log/** folder will save all results.
 The **./lra_model/** folder will save all best models.
 
-We provide our used configurations in ***lra_config.py***.
+We provide our used configurations in ***config.ipynb***.
 
 # **Cite**
 ```
