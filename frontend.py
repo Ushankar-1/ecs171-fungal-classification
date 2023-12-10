@@ -29,7 +29,7 @@ def fungus_input_converter(image):
 
 def fungus_prediction(imgName):
     # Demo code:
-
+    
     delayTime = 0.5 + float(random.randint(1,15))/10
 
     time.sleep(delayTime)
@@ -65,7 +65,7 @@ def main():
         imgName = inputImage.name.split('.')[0] #gets rid of .jpg or .jpeg extension in name
 
         st.subheader(imgName)
-        st.text('tenegrad value =' + str(tenegrad))
+        st.text('tenegrad value = ' + str(tenegrad))
         st.image([inputData, gray_image], caption=['Original Image', 'Grayscale Image'], width=300, channels='RBG')
 
     classification = ''
