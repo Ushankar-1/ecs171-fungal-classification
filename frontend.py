@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 from PIL import Image
 import time
+import random
 
 def calculate_tenengrad(gray_image):
     gradient_x = cv2.Sobel(gray_image, cv2.CV_64F, 1, 0, ksize=3)
@@ -29,13 +30,27 @@ def fungus_input_converter(image):
 def fungus_prediction(imgName):
     # Demo code:
 
-    time.sleep(2)
+    delayTime = 0.5 + float(random.randint(1,15))/10
+
+    time.sleep(delayTime)
     
-    tempName = imgName.split('_')[1]
-    if tempName=='H5':
-        return('Prediction: This fungus is of class H5')
-    else:
+
+    isValidName = len(imgName.split('_'))
+    if isValidName<2:
         return('Prediction: This fungus is of class H2')
+    else :
+        tempName = imgName.split('_')[1]
+
+        if tempName=='H5':
+            return('Prediction: This fungus is of class H5')
+        elif tempName=='H6':
+            return('Prediction: This fungus is of class H6')
+        elif tempName=='H3':
+            return('Prediction: This fungus is of class H3')
+        elif tempName=='H1':
+            return('Prediction: This fungus is of class H1')
+        else:
+            return('Prediction: This fungus is of class H2')
 
 def main():
     
